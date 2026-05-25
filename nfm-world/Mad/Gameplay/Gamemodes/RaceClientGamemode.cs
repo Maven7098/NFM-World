@@ -23,7 +23,7 @@ public class RaceClientGamemode(BaseGamemodeParameters gamemodeParameters, BaseR
     public override void Reset()
     {
         base.Reset();
-        carsInRace[playerCarIndex].MadEngine.PowerUp += _pdBars.EventPowerUp;
+        carsInRace[playerCarIndex].Mad.PowerUp += _pdBars.EventPowerUp;
         
         raceValues.clientStageRenderer.ResetCheckpointGlow();
         
@@ -37,9 +37,9 @@ public class RaceClientGamemode(BaseGamemodeParameters gamemodeParameters, BaseR
     {
         _lapTimerSplits.SetLapText(carsInRace[playerCarIndex].currentLap, currentStage.nlaps);
 
-        _pdBars.SetDamageBarFill(carsInRace[playerCarIndex].MadEngine.Hitmag, carsInRace[0].Stats.Maxmag);
+        _pdBars.SetDamageBarFill(carsInRace[playerCarIndex].Mad.Hitmag, carsInRace[0].Stats.Maxmag);
         _pdBars.UpdateDamageBarColor();
-        _pdBars.SetPowerBarFill((float)carsInRace[playerCarIndex].MadEngine.Power);
+        _pdBars.SetPowerBarFill((float)carsInRace[playerCarIndex].Mad.Power);
         _pdBars.UpdatePowerBarColor();
 
         base.InRace();

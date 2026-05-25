@@ -1,7 +1,14 @@
+using System.Reflection;
 using NFMWorld.DriverInterface;
 using NFMWorld.Gameplay;
 using NFMWorld.Gameplay.Gamemodes;
 using NFMWorld.UI;
+using NFMWorldLibrary;
+using NFMWorldLibrary.Backend;
+using NFMWorldLibrary.FixedMath;
+using NFMWorldLibrary.Multiplayer;
+using Steamworks;
+using WorldXaml.UI.Yoga;
 
 namespace NFMWorld;
 
@@ -247,8 +254,8 @@ public static class DevConsoleCommands
         {
             var car = inRacePhase.GetClientCar(inRacePhase.playerCarIndex);
             var nbsq = 0;
-            var squash = inRacePhase.CarsInRace[inRacePhase.playerCarIndex].MadEngine.Squash;
-            var mtouch = inRacePhase.CarsInRace[inRacePhase.playerCarIndex].MadEngine.Mtouch;
+            var squash = inRacePhase.CarsInRace[inRacePhase.playerCarIndex].Mad.Squash;
+            var mtouch = inRacePhase.CarsInRace[inRacePhase.playerCarIndex].Mad.Mtouch;
             MeshDamage.DamageY(car.Stats, car, 0, amount, mtouch, ref nbsq, ref squash);
             MeshDamage.DamageY(car.Stats, car, 1, amount, mtouch, ref nbsq, ref squash);
             MeshDamage.DamageY(car.Stats, car, 2, amount, mtouch, ref nbsq, ref squash);
@@ -344,7 +351,7 @@ public static class DevConsoleCommands
 
         if (GameSparker.CurrentPhase is InRacePhase inRacePhase)
         {
-            inRacePhase.CarsInRace[inRacePhase.playerCarIndex].MadEngine.Speed = (fix64)speed;
+            inRacePhase.CarsInRace[inRacePhase.playerCarIndex].Mad.Speed = (fix64)speed;
         }
         Logging.Info($"Set player car speed to {speed}");
     }

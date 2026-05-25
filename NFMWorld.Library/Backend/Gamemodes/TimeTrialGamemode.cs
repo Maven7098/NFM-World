@@ -91,7 +91,7 @@ public class TimeTrialGamemode(BaseGamemodeParameters gamemodeParameters, IRaceV
     protected virtual void TimeTrialFinished()
     {
         carsInRace[playerCarIndex].Mad.Halted = true;
-        carsInRace[playerCarIndex].Drive(raceValues.CurrentStage);;
+        carsInRace[playerCarIndex].Drive(raceValues.CurrentStage);
     }
 
     protected virtual void CountdownTick()

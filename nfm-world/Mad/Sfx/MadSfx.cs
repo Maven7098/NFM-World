@@ -85,7 +85,7 @@ public class MadSfx
         }
     }
 
-    public void Tick(Control control, Mad mad, CarStats stats)
+    public void Tick(Control control, MadEngine mad, CarStats stats)
     {
         if (!Mute)
         {

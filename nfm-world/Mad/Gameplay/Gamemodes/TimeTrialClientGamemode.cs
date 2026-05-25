@@ -67,7 +67,7 @@ public class TimeTrialClientGamemode(BaseGamemodeParameters gamemodeParameters, 
         _bestTimeTrial = null;
         _tick = 0;
 
-        carsInRace[playerCarIndex].MadEngine.PowerUp += _pdBars.EventPowerUp;
+        carsInRace[playerCarIndex].Mad.PowerUp += _pdBars.EventPowerUp;
 
         // ghost
         SavedTimeTrial? bestTimeDemo = SavedTimeTrial.Load(player.CarName, currentStage.Path);
@@ -113,9 +113,9 @@ public class TimeTrialClientGamemode(BaseGamemodeParameters gamemodeParameters, 
         SetLapText(carsInRace[playerCarIndex].currentLap);
         SetTimeText();
 
-        _pdBars.SetDamageBarFill(carsInRace[playerCarIndex].MadEngine.Hitmag, carsInRace[0].Stats.Maxmag);
+        _pdBars.SetDamageBarFill(carsInRace[playerCarIndex].Mad.Hitmag, carsInRace[0].Stats.Maxmag);
         _pdBars.UpdateDamageBarColor();
-        _pdBars.SetPowerBarFill((float)carsInRace[playerCarIndex].MadEngine.Power);
+        _pdBars.SetPowerBarFill((float)carsInRace[playerCarIndex].Mad.Power);
         _pdBars.UpdatePowerBarColor();
 
         if (_bestTimeTrial != null)

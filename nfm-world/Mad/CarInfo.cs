@@ -1,4 +1,8 @@
-﻿namespace NFMWorld;
+﻿using Microsoft.Xna.Framework.Graphics;
+using NFMWorldLibrary;
+using NFMWorldLibrary.Rad;
+
+namespace NFMWorld;
 
 public class CarMesh(GraphicsDevice graphicsDevice, Rad3d rad) : Mesh(graphicsDevice, rad)
 {
