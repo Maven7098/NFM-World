@@ -1,9 +1,9 @@
 using System;
 using NFMWorldLibrary.Backend.AI;
-using NFMWorldLibrary.FixedMath;
 using NFMWorldLibrary.Backend.Gamemodes;
+using fix64 = FixedMathSharp.Fixed64;
 
-namespace NFMWorld.Mad.AI
+namespace NFMWorld.MadEngine.AI
 {
     public class TimeTrialRunAdapter : ITrackableRun
     {

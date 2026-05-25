@@ -5,7 +5,7 @@ using NFMWorldLibrary.Backend.Gamemodes;
 using NFMWorldLibrary.Backend.AI;
 using NFMWorldLibrary.Util;
 
-namespace NFMWorld.Mad.AI
+namespace NFMWorld.MadEngine.AI
 {
     public class TrainingRunner
     {

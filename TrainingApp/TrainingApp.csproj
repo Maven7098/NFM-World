@@ -8,6 +8,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NFMWorld.Library\NFMWorld.Library.csproj" />
-    <ProjectReference Include="..\nfm-world\NFMWorld.csproj" />
   </ItemGroup>
 </Project>

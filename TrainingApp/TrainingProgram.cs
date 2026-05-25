@@ -1,5 +1,3 @@
-using NFMWorld.Training;
-
 namespace NFMWorld.MadEngine.AI
 {
     class TrainingProgram
