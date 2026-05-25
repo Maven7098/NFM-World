@@ -26,18 +26,16 @@ public class MadSfx
     private int lcn = 0;
     private bool[] pengs = new bool[7];
 
-    private Mad Mad;
+    private MadEngine Mad;
 
     public bool Mute = false;
 
-    public MadSfx(Mad mad)
+    public MadSfx(MadEngine mad)
     {
-        Mad = mad;
-
-        Mad.SfxPlayCrash += SfxPlayCrash;
-        Mad.SfxPlayScrape += SfxPlayScrape;
-        Mad.SfxPlayGscrape += SfxPlayGscrape;
-        Mad.SfxPlaySkid += SfxPlaySkid;
+        mad.SfxPlayCrash += SfxPlayCrash;
+        mad.SfxPlayScrape += SfxPlayScrape;
+        mad.SfxPlayGscrape += SfxPlayGscrape;
+        mad.SfxPlaySkid += SfxPlaySkid;
         mad.PowerUp += SfxPlayPowerup;
     }
 

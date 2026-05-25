@@ -1,14 +1,7 @@
-using System.Reflection;
 using NFMWorld.DriverInterface;
 using NFMWorld.Gameplay;
 using NFMWorld.Gameplay.Gamemodes;
 using NFMWorld.UI;
-using NFMWorldLibrary;
-using NFMWorldLibrary.Backend;
-using NFMWorldLibrary.FixedMath;
-using NFMWorldLibrary.Multiplayer;
-using Steamworks;
-using WorldXaml.UI.Yoga;
 
 namespace NFMWorld;
 
@@ -21,7 +14,7 @@ public static class DevConsoleCommands
         console.RegisterCommand("help", (c, args) => PrintHelp(c));
         console.RegisterCommand("clear", (c, args) => ClearLog(c));
         console.RegisterCommand("speed", SetSpeed);
-        console.RegisterCommand("map", LoadStage);
+        console.RegisterCommand("stage", LoadStage);
         console.RegisterCommand("setpos", SetPos);
         console.RegisterCommand("create", CreateObject);
         console.RegisterCommand("reset", (c, args) => ResetCar(c));
@@ -138,8 +131,8 @@ public static class DevConsoleCommands
                     .ToList()
                 : []);
             
-        // map command: only autocomplete first argument (position 0)
-        console.RegisterArgumentAutocompleter("map", (args, position) => 
+        // stage command: only autocomplete first argument (position 0)
+        console.RegisterArgumentAutocompleter("stage", (args, position) => 
             position == 0 ? GameSparker.GetAvailableStages() : []);
     }
 
@@ -153,7 +146,7 @@ public static class DevConsoleCommands
     private static void DemoPlayback(DevConsole console, string[] args)
     {
         TimeTrialClientGamemode.PlaybackOnReset = !TimeTrialClientGamemode.PlaybackOnReset;
-        Logging.Info("Playback set to " + TimeTrialClientGamemode.PlaybackOnReset + ", for maps with a saved demo file.");
+        Logging.Info("Playback set to " + TimeTrialClientGamemode.PlaybackOnReset + ", for stages with a saved demo file.");
         Logging.Info("Restart the time trial for changes to take effect.");
     }
 
@@ -254,8 +247,8 @@ public static class DevConsoleCommands
         {
             var car = inRacePhase.GetClientCar(inRacePhase.playerCarIndex);
             var nbsq = 0;
-            var squash = inRacePhase.CarsInRace[inRacePhase.playerCarIndex].Mad.Squash;
-            var mtouch = inRacePhase.CarsInRace[inRacePhase.playerCarIndex].Mad.Mtouch;
+            var squash = inRacePhase.CarsInRace[inRacePhase.playerCarIndex].MadEngine.Squash;
+            var mtouch = inRacePhase.CarsInRace[inRacePhase.playerCarIndex].MadEngine.Mtouch;
             MeshDamage.DamageY(car.Stats, car, 0, amount, mtouch, ref nbsq, ref squash);
             MeshDamage.DamageY(car.Stats, car, 1, amount, mtouch, ref nbsq, ref squash);
             MeshDamage.DamageY(car.Stats, car, 2, amount, mtouch, ref nbsq, ref squash);
@@ -351,7 +344,7 @@ public static class DevConsoleCommands
 
         if (GameSparker.CurrentPhase is InRacePhase inRacePhase)
         {
-            inRacePhase.CarsInRace[inRacePhase.playerCarIndex].Mad.Speed = (fix64)speed;
+            inRacePhase.CarsInRace[inRacePhase.playerCarIndex].MadEngine.Speed = (fix64)speed;
         }
         Logging.Info($"Set player car speed to {speed}");
     }
@@ -413,7 +406,7 @@ public static class DevConsoleCommands
     {
         if (args.Length < 1)
         {
-            Logging.Info("Usage: map <stage_file>");
+            Logging.Info("Usage: stage <stage_file>");
             return;
         }
 

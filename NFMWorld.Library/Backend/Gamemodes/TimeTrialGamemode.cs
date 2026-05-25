@@ -35,7 +35,7 @@ public class TimeTrialGamemode(BaseGamemodeParameters gamemodeParameters, IRaceV
         
         carsInRace.Clear();
         carsInRace[playerCarIndex] = LoadPlayerCar(0, 0);
-        carsInRace[playerCarIndex].currentCheckpoint = 0;
+        carsInRace[playerCarIndex].CurrentCheckpoint = 0;
         carsInRace[playerCarIndex].currentLap = 0;
 
         _currentState = TimeTrialState.Countdown;

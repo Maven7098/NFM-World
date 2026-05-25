@@ -23,7 +23,7 @@ public class RaceClientGamemode(BaseGamemodeParameters gamemodeParameters, BaseR
     public override void Reset()
     {
         base.Reset();
-        carsInRace[playerCarIndex].Mad.PowerUp += _pdBars.EventPowerUp;
+        carsInRace[playerCarIndex].MadEngine.PowerUp += _pdBars.EventPowerUp;
         
         raceValues.clientStageRenderer.ResetCheckpointGlow();
         
@@ -37,22 +37,22 @@ public class RaceClientGamemode(BaseGamemodeParameters gamemodeParameters, BaseR
     {
         _lapTimerSplits.SetLapText(carsInRace[playerCarIndex].currentLap, currentStage.nlaps);
 
-        _pdBars.SetDamageBarFill(carsInRace[playerCarIndex].Mad.Hitmag, carsInRace[0].Stats.Maxmag);
+        _pdBars.SetDamageBarFill(carsInRace[playerCarIndex].MadEngine.Hitmag, carsInRace[0].Stats.Maxmag);
         _pdBars.UpdateDamageBarColor();
-        _pdBars.SetPowerBarFill((float)carsInRace[playerCarIndex].Mad.Power);
+        _pdBars.SetPowerBarFill((float)carsInRace[playerCarIndex].MadEngine.Power);
         _pdBars.UpdatePowerBarColor();
 
         base.InRace();
         
-        if (carsInRace[playerCarIndex].currentCheckpoint != _lastClientCheckpoint)
+        if (carsInRace[playerCarIndex].CurrentCheckpoint != _lastClientCheckpoint)
         {
-            _lastClientCheckpoint = carsInRace[playerCarIndex].currentCheckpoint;
+            _lastClientCheckpoint = carsInRace[playerCarIndex].CurrentCheckpoint;
             SfxLibrary.checkpoint?.Play();
         }
 
         raceValues.clientStageRenderer.UpdateCheckpointGlow(
-            carsInRace[playerCarIndex].currentCheckpoint,
-            carsInRace[playerCarIndex].currentCheckpoint == currentStage.checkpoints.Count - 1 && carsInRace[playerCarIndex].currentLap == currentStage.nlaps - 1
+            carsInRace[playerCarIndex].CurrentCheckpoint,
+            carsInRace[playerCarIndex].CurrentCheckpoint == currentStage.checkpoints.Count - 1 && carsInRace[playerCarIndex].currentLap == currentStage.nlaps - 1
         );
     }
 
