@@ -33,9 +33,9 @@ public class TimeTrialClientGamemode(BaseGamemodeParameters gamemodeParameters, 
 
     private CentralTextView _centralTextNode = new CentralTextView();
 
-    public void SetLapText(int currentLap)
+    public void SetLapText(int CurrentLap)
     {
-        _lapTimerSplits.LapText.Text = $"{currentLap + 1}/{currentStage.nlaps}";
+        _lapTimerSplits.LapText.Text = $"{CurrentLap + 1}/{currentStage.nlaps}";
     }
 
     public void SetTimeText()
@@ -79,7 +79,7 @@ public class TimeTrialClientGamemode(BaseGamemodeParameters gamemodeParameters, 
                 : new BackendCar(carsInRace[playerCarIndex], 0, false);
             raceValues.GetClientCar(playerCarIndex + 1)!.Sfx!.Mute = true;
             raceValues.GetClientCar(playerCarIndex + 1).AlphaOverride = 0.2f;
-            carsInRace[playerCarIndex + 1].currentLap = 0;
+            carsInRace[playerCarIndex + 1].CurrentLap = 0;
         }
 
         currentTimeTrial = new SavedTimeTrial(player.CarName, currentStage.Path, currentStage.stageLoader, carsInRace[playerCarIndex].Rad);
@@ -110,7 +110,7 @@ public class TimeTrialClientGamemode(BaseGamemodeParameters gamemodeParameters, 
 
     protected override void TimeTrialInRace()
     {
-        SetLapText(carsInRace[playerCarIndex].currentLap);
+        SetLapText(carsInRace[playerCarIndex].CurrentLap);
         SetTimeText();
 
         _pdBars.SetDamageBarFill(carsInRace[playerCarIndex].Mad.Hitmag, carsInRace[0].Stats.Maxmag);
@@ -128,7 +128,7 @@ public class TimeTrialClientGamemode(BaseGamemodeParameters gamemodeParameters, 
         currentTimeTrial.RecordTick(carsInRace[playerCarIndex]);
         
         var lastCurrentCheckpoint = carsInRace[playerCarIndex].CurrentCheckpoint;
-        var lastLap = carsInRace[playerCarIndex].currentLap;
+        var lastLap = carsInRace[playerCarIndex].CurrentLap;
         base.TimeTrialInRace();
 
         if (carsInRace[playerCarIndex].CurrentCheckpoint != lastCurrentCheckpoint)
@@ -146,7 +146,7 @@ public class TimeTrialClientGamemode(BaseGamemodeParameters gamemodeParameters, 
 
             currentTimeTrial.RecordSplit(_raceTimer.ElapsedMilliseconds);
 
-            if (lastLap != carsInRace[playerCarIndex].currentLap)
+            if (lastLap != carsInRace[playerCarIndex].CurrentLap)
             {
                 // lap changed
                 _lastLapSplitDiff = currentLapSplitDiff;
@@ -158,10 +158,10 @@ public class TimeTrialClientGamemode(BaseGamemodeParameters gamemodeParameters, 
 
         raceValues.clientStageRenderer.UpdateCheckpointGlow(
             carsInRace[playerCarIndex].CurrentCheckpoint,
-            carsInRace[playerCarIndex].CurrentCheckpoint == currentStage.checkpoints.Count - 1 && carsInRace[playerCarIndex].currentLap == currentStage.nlaps - 1
+            carsInRace[playerCarIndex].CurrentCheckpoint == currentStage.checkpoints.Count - 1 && carsInRace[playerCarIndex].CurrentLap == currentStage.nlaps - 1
         );
 
-        if (carsInRace[playerCarIndex].currentLap >= currentStage.nlaps)
+        if (carsInRace[playerCarIndex].CurrentLap >= currentStage.nlaps)
         {
             _raceTimer.Stop();
         }
@@ -217,7 +217,7 @@ public class TimeTrialClientGamemode(BaseGamemodeParameters gamemodeParameters, 
 
     private void RenderInfo()
     {
-        if ((carsInRace[playerCarIndex].CurrentCheckpoint != 0 || carsInRace[playerCarIndex].currentLap != 0) && _bestTimeTrial != null)
+        if ((carsInRace[playerCarIndex].CurrentCheckpoint != 0 || carsInRace[playerCarIndex].CurrentLap != 0) && _bestTimeTrial != null)
         {
             _lapTimerSplits.CheckpointSplitsText.Display = YgDisplay.Flex;
             long diff = currentTimeTrial.GetSplitDiff(_bestTimeTrial, currentTimeTrial.Splits.SplitTimes.Count - 1);
@@ -234,11 +234,11 @@ public class TimeTrialClientGamemode(BaseGamemodeParameters gamemodeParameters, 
             _lapTimerSplits.CheckpointSplitsText.Display = YgDisplay.None;
         }
 
-        if (carsInRace[playerCarIndex].currentLap > 0 && _bestTimeTrial != null)
+        if (carsInRace[playerCarIndex].CurrentLap > 0 && _bestTimeTrial != null)
         {
             _lapTimerSplits.LapSplitsText.Display = YgDisplay.Flex;
-            long lapTime = currentTimeTrial.GetLapTime(currentStage.checkpoints.Count, carsInRace[playerCarIndex].currentLap - 1);
-            long bestLapTime = _bestTimeTrial.GetLapTime(currentStage.checkpoints.Count, carsInRace[playerCarIndex].currentLap - 1);
+            long lapTime = currentTimeTrial.GetLapTime(currentStage.checkpoints.Count, carsInRace[playerCarIndex].CurrentLap - 1);
+            long bestLapTime = _bestTimeTrial.GetLapTime(currentStage.checkpoints.Count, carsInRace[playerCarIndex].CurrentLap - 1);
             long lapDiff = lapTime - bestLapTime;
             _lapTimerSplits.LapSplitsText.Color = lapDiff > 0 ? new Color(255, 128, 128) : new Color(128, 255, 128);
 

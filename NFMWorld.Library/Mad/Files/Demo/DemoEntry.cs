@@ -72,7 +72,7 @@ public struct DemoEntry
         entry.AngularVelocities.Lcomp = car.Mad.Lcomp;
         entry.AngularVelocities.Rcomp = car.Mad.Rcomp;
         entry.RacePosition.CheckpointInlap = car.CurrentCheckpoint;
-        entry.RacePosition.Lap = car.currentLap;
+        entry.RacePosition.Lap = car.CurrentLap;
         entry.StuntState.StuntType = car.Mad.Loop;
         entry.StuntState.Travxz = car.Mad.Travxz;
         entry.StuntState.Travxy = car.Mad.Travxy;

@@ -55,7 +55,7 @@ public class RaceGamemode(BaseGamemodeParameters gamemodeParameters, IRaceValues
         {
             carsInRace[idx] = new BackendCar(BackendGameSparker.GetCar(player.CarName).Rad, idx, -500 + (400 * idx), 0, idx == playerCarIndex);
             carsInRace[idx].CurrentCheckpoint = 0;
-            carsInRace[idx].currentLap = 0;
+            carsInRace[idx].CurrentLap = 0;
             if (player.IsBot)
             {
                 carsInRace[idx].Bot = new ElStupido(this, raceValues);
@@ -136,7 +136,7 @@ public class RaceGamemode(BaseGamemodeParameters gamemodeParameters, IRaceValues
 
         for (var i = 0; i < carsInRace.Count; i++)
         {
-            if (carsInRace[i].currentLap >= currentStage.nlaps)
+            if (carsInRace[i].CurrentLap >= currentStage.nlaps)
             {
                 _currentState = InnerRaceState.Finished;
                 _winner = i;
@@ -158,7 +158,7 @@ public class RaceGamemode(BaseGamemodeParameters gamemodeParameters, IRaceValues
         if (_finishTicks == 30)
         {
             var positions = new byte[carsInRace.Count];
-            // always give position 0 to _winner. assign remaining positions in ascending order based on placement.
+            // always give position 0 to _winner. assign remaining positions in ascending order based on Placement.
             positions[_winner] = 0;
             byte currentPosition = 1;
             for (byte pos = 0; pos < carsInRace.Count; pos++)
@@ -167,7 +167,7 @@ public class RaceGamemode(BaseGamemodeParameters gamemodeParameters, IRaceValues
                 for (byte i = 0; i < carsInRace.Count; i++)
                 {
                     if (i == _winner) continue;
-                    if (carsInRace[i].placement == pos)
+                    if (carsInRace[i].Placement == pos)
                     {
                         positions[i] = currentPosition;
                         currentPosition++;

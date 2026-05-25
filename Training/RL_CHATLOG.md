@@ -550,7 +550,7 @@
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 
   Decoupling Reward Logic: 
-  Decoupling completion rewards and checking RewardManager's placement.
+  Decoupling completion rewards and checking RewardManager's Placement.
 
 
 ✦ Yes, you should definitely decouple the detection of "finished" from the

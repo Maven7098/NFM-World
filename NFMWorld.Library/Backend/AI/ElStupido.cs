@@ -59,7 +59,7 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
     {
         // Get current race state information
         var u = car.Control;
-        var position = car.placement;
+        var position = car.Placement;
         var mad = car.Mad;
 
         // Initialize random number generator with deterministic seed based on car position
@@ -190,9 +190,9 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
     {
         // If distance to target node <5000 units, target next node, except if the current node is a checkpoint
         var targetNodeIndex = _targetNode;
-        if (targetNodeIndex < car.lastCheckpointNode + 1)
+        if (targetNodeIndex < car.LastCheckpointNode + 1)
         {
-            targetNodeIndex = car.lastCheckpointNode + 1;
+            targetNodeIndex = car.LastCheckpointNode + 1;
             if (targetNodeIndex >= racePhase.CurrentStage.nodes.Count)
             {
                 targetNodeIndex = 0;
@@ -206,7 +206,7 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
         }
 
         // Special case: if we've just crossed the final checkpoint and are starting a new lap
-        if (targetNodeIndex == finalCheckpointNodeIndex && car.lastCheckpointNode == -1)
+        if (targetNodeIndex == finalCheckpointNodeIndex && car.LastCheckpointNode == -1)
         {
             targetNodeIndex = 0;
         }

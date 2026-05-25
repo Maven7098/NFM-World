@@ -36,11 +36,11 @@ public class TimeTrialGamemode(BaseGamemodeParameters gamemodeParameters, IRaceV
         carsInRace.Clear();
         carsInRace[playerCarIndex] = LoadPlayerCar(0, 0);
         carsInRace[playerCarIndex].CurrentCheckpoint = 0;
-        carsInRace[playerCarIndex].currentLap = 0;
+        carsInRace[playerCarIndex].CurrentLap = 0;
 
         _currentState = TimeTrialState.Countdown;
 
-        carsInRace[playerCarIndex].currentLap = 0;
+        carsInRace[playerCarIndex].CurrentLap = 0;
     }
 
     protected virtual BackendCar LoadPlayerCar(int x, int z)
@@ -81,7 +81,7 @@ public class TimeTrialGamemode(BaseGamemodeParameters gamemodeParameters, IRaceV
         FixHoopHelper.HandleFixHoops(currentStage, carsInRace[playerCarIndex]);
         CheckPointHelper.HandleCheckPoint(currentStage, carsInRace[playerCarIndex]);
 
-        if (carsInRace[playerCarIndex].currentLap >= currentStage.nlaps)
+        if (carsInRace[playerCarIndex].CurrentLap >= currentStage.nlaps)
         {
             RaceFinished?.Invoke(this, []);
             _currentState = TimeTrialState.Finished;

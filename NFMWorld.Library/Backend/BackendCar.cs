@@ -15,10 +15,10 @@ public class BackendCar : BackendGameObject, IInGameCar
     public MadEngine Mad { get; }
     public Control Control { get; }
     public ushort CurrentCheckpoint { get; set; }
-    public byte currentLap { get; set; } // mad.nlaps
-    public int totalCheckpoint { get; set; } // mad.clear
-    public int lastCheckpointNode { get; set; } = -1; // resets on new lap
-    public int placement { get; set; } // cp.pos
+    public byte CurrentLap { get; set; } // mad.nlaps
+    public int TotalCheckpoint { get; set; } // mad.clear
+    public int LastCheckpointNode { get; set; } = -1; // resets on new lap
+    public int Placement { get; set; } // cp.pos
     public Rad3d Rad { get; }
     public CarStats Stats { get; }
     public bool Wasted => Mad.Wasted;

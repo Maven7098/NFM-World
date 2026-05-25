@@ -219,10 +219,10 @@ public class StageEditorPhase : BasePhase
     private bool _isDraggingFromLibrary = false;
     
     // Placement mode: user selects a part from the library then clicks in the viewport to place it
-    private int _pendingPlacementPartIndex = -1; // index into _availableParts; -1 = not in placement mode
+    private int _pendingPlacementPartIndex = -1; // index into _availableParts; -1 = not in Placement mode
     private f64Vector3 _pendingPlacementPos = f64Vector3.Zero;
     private bool _hasValidPlacementPos = false;
-    private float _pendingPlacementYaw = 0f;  // degrees, modified by Q/E while in placement mode
+    private float _pendingPlacementYaw = 0f;  // degrees, modified by Q/E while in Placement mode
     
     // Snapping
     private bool _snapEnabled = false;
@@ -1211,7 +1211,7 @@ public class StageEditorPhase : BasePhase
         if (imguiWantsKeyboard) return;
         if (!_isOpen) return;
         
-        // In placement mode: Q/E rotate the pending piece by 45°; Q is also the camera-down key so
+        // In Placement mode: Q/E rotate the pending piece by 45°; Q is also the camera-down key so
         // we handle rotation first and skip the camera binding.
         if (_pendingPlacementPartIndex >= 0)
         {
@@ -1392,7 +1392,7 @@ public class StageEditorPhase : BasePhase
         
         if (key == Keys.Escape)
         {
-            // Cancel placement mode, swap mode, and rect selection
+            // Cancel Placement mode, swap mode, and rect selection
             _pendingPlacementPartIndex = -1;
             _hasValidPlacementPos = false;
             _isSwapMode = false;
@@ -1612,7 +1612,7 @@ public class StageEditorPhase : BasePhase
     }
     
     /// <summary>
-    /// Renders a translucent ghost preview of the pending placement part at _pendingPlacementPos.
+    /// Renders a translucent ghost preview of the pending Placement part at _pendingPlacementPos.
     /// Shows semi-transparent filled polygons plus a bright wireframe outline.
     /// </summary>
     private void RenderPlacementPreview()
@@ -2336,7 +2336,7 @@ public class StageEditorPhase : BasePhase
             _rectSelectEndY = y;
         }
         
-        // Update placement preview position while hovering over the viewport
+        // Update Placement preview position while hovering over the viewport
         if (_pendingPlacementPartIndex >= 0)
         {
             if (IsMouseInViewport(x, y))
@@ -2507,7 +2507,7 @@ public class StageEditorPhase : BasePhase
             }
             else if (_pendingPlacementPartIndex >= 0)
             {
-                // Right-click cancels placement mode
+                // Right-click cancels Placement mode
                 _pendingPlacementPartIndex = -1;
                 _hasValidPlacementPos = false;
             }
@@ -2587,10 +2587,10 @@ public class StageEditorPhase : BasePhase
                                 ActiveTab.SelectedPieceId = instance.Id;
                                 ActiveTab.HasUnsavedChanges = true;
                                 RebuildClientRenderer();
-                                // Stay in placement mode so the user can keep placing the same part
+                                // Stay in Placement mode so the user can keep placing the same part
                             }
                         }
-                        return; // Don't do ray picking while in placement mode
+                        return; // Don't do ray picking while in Placement mode
                     }
                     
                     var pickedPieceId = PerformRayPicking(x, y);
@@ -2834,7 +2834,7 @@ public class StageEditorPhase : BasePhase
         // Process one pending preview thumbnail per frame
         ProcessOnePreviewThumbnail();
         
-        // Render placement ghost if in placement mode and mouse is over viewport
+        // Render Placement ghost if in Placement mode and mouse is over viewport
         if (_pendingPlacementPartIndex >= 0 && _hasValidPlacementPos)
             RenderPlacementPreview();
         
@@ -4521,7 +4521,7 @@ public class StageEditorPhase : BasePhase
         if (ImGui.SmallButton(_snapEnabled ? $"Snap ON: {_snapSize:F0}" : "Snap OFF"))
             _snapEnabled = !_snapEnabled;
         if (snapOn) ImGui.PopStyleColor();
-        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Toggle grid snapping (S).\nScroll wheel cycles snap size when in placement mode.");
+        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Toggle grid snapping (S).\nScroll wheel cycles snap size when in Placement mode.");
         
         if (_snapEnabled)
         {
@@ -4655,7 +4655,7 @@ public class StageEditorPhase : BasePhase
             
             ImGui.EndGroup();
             
-            // Highlight border when this part is selected for placement
+            // Highlight border when this part is selected for Placement
             if (isPendingPlacement)
             {
                 var drawList = ImGui.GetWindowDrawList();
@@ -4715,7 +4715,7 @@ public class StageEditorPhase : BasePhase
                 }
                 else
                 {
-                    // Enter placement mode: the user will click in the viewport to place the part
+                    // Enter Placement mode: the user will click in the viewport to place the part
                     _pendingPlacementPartIndex = i;
                     _hasValidPlacementPos = false;
                 }

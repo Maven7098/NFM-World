@@ -9,10 +9,10 @@ public interface IInGameCar : ICar
     MadEngine Mad { get; }
     Control Control { get; }
     ushort CurrentCheckpoint { get; set; }
-    byte currentLap { get; set; } // mad.nlaps
-    int totalCheckpoint { get; set; } // mad.clear
-    int lastCheckpointNode { get; set; } // resets on new lap
-    int placement { get; set; } // cp.pos
+    byte CurrentLap { get; set; } // mad.nlaps
+    int TotalCheckpoint { get; set; } // mad.clear
+    int LastCheckpointNode { get; set; } // resets on new lap
+    int Placement { get; set; } // cp.pos
     bool Wasted { get; }
     BaseAi? Bot { get; set; }
 

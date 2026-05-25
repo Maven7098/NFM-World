@@ -20,8 +20,8 @@ namespace NFMWorld.Mad.AI
         }
 
         public long GetCurrentTime() => 0; // TODO: Implement if needed
-        public int GetCurrentLap() => _gamemode.carsInRace[_gamemode.playerCarIndex].currentLap;
+        public int GetCurrentLap() => _gamemode.carsInRace[_gamemode.playerCarIndex].CurrentLap;
         public int GetTotalLaps() => _gamemode.currentStage.nlaps;
-        public fix64 GetTrackPosition() => (fix64)_gamemode.carsInRace[_gamemode.playerCarIndex].totalCheckpoint / (fix64)(_gamemode.currentStage.checkpoints.Count * _gamemode.currentStage.nlaps);
+        public fix64 GetTrackPosition() => (fix64)_gamemode.carsInRace[_gamemode.playerCarIndex].TotalCheckpoint / (fix64)(_gamemode.currentStage.checkpoints.Count * _gamemode.currentStage.nlaps);
     }
 }

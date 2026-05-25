@@ -44,7 +44,7 @@ namespace NFMWorldLibrary.Backend.AI
             float currentReward = RewardManager.Calculate(car, mad, roleFlag);
 
             // 2. Pack Telemetry
-            float rank = (float)car.placement / 10f; 
+            float rank = (float)car.Placement / 10f; 
             var packet = TelemetryMapper.Pack(car, mad, roleFlag, rank, currentReward);
 
             // 3. Serialize and Send

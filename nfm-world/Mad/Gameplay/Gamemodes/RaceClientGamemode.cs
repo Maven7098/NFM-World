@@ -35,7 +35,7 @@ public class RaceClientGamemode(BaseGamemodeParameters gamemodeParameters, BaseR
 
     protected override void InRace()
     {
-        _lapTimerSplits.SetLapText(carsInRace[playerCarIndex].currentLap, currentStage.nlaps);
+        _lapTimerSplits.SetLapText(carsInRace[playerCarIndex].CurrentLap, currentStage.nlaps);
 
         _pdBars.SetDamageBarFill(carsInRace[playerCarIndex].Mad.Hitmag, carsInRace[0].Stats.Maxmag);
         _pdBars.UpdateDamageBarColor();
@@ -52,7 +52,7 @@ public class RaceClientGamemode(BaseGamemodeParameters gamemodeParameters, BaseR
 
         raceValues.clientStageRenderer.UpdateCheckpointGlow(
             carsInRace[playerCarIndex].CurrentCheckpoint,
-            carsInRace[playerCarIndex].CurrentCheckpoint == currentStage.checkpoints.Count - 1 && carsInRace[playerCarIndex].currentLap == currentStage.nlaps - 1
+            carsInRace[playerCarIndex].CurrentCheckpoint == currentStage.checkpoints.Count - 1 && carsInRace[playerCarIndex].CurrentLap == currentStage.nlaps - 1
         );
     }
 

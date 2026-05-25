@@ -21,13 +21,30 @@ namespace NFMWorldLibrary.Backend.AI
                 Speed = (float)mad.Speed,
 
                 // Car Stats
-                Airc = (float)mad.Stat.Airc,
-                Moment = (float)mad.Stat.Moment,
-                Grip = (float)mad.Stat.Grip,
-                Swits = (float)mad.Stat.Swits[0],
-                Push = (float)mad.Stat.Push,
+                Swits = mad.Stat.Swits,
+                Acelf = mad.Stat.Acelf,
+                Handb = mad.Stat.Handb,
+                Airs = mad.Stat.Airs,
+                Airc = mad.Stat.Airc,
+                Turn = mad.Stat.Turn,
+                Grip = mad.Stat.Grip,
+                Bounce = mad.Stat.Bounce,
+                Moment = mad.Stat.Moment,
+                Comprad = mad.Stat.Comprad,
+                Push = mad.Stat.Push,
+                Revpush = mad.Stat.Revpush,
+                Lift = mad.Stat.Lift,
+                Revlift = mad.Stat.Revlift,
+                Powerloss = mad.Stat.Powerloss,
+                Flipy = mad.Stat.Flipy,
+                Msquash = mad.Stat.Msquash,
+                Clrad = mad.Stat.Clrad,
+                Dammult = mad.Stat.Dammult,
+                Maxmag = mad.Stat.Maxmag,
 
                 // Navigation (Basic implementation for now)
+                // Navigation requires the ability to find nearest objects like ramps and walls
+                // which is not currently implemented. For now, we can set these to zero or some default value.
                 AngleToNode = 0f,
                 DistanceToNode = 0f,
                 AngleToCheckpoint = 0f,
