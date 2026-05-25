@@ -35,17 +35,17 @@ namespace NFMWorldLibrary.Backend.AI
             Send($"REWARD:{completionReward}");
         }
 
-        public override void RunAi(IInGameCar car, int currentCarIndex)
+        public override void RunAi(IInGameCar car, IStage stage, int currentCarIndex)
         {
             var mad = car.Mad;
             
             // 1. Calculate Reward
             float roleFlag = 0; // Default to Racer for now
-            float currentReward = RewardManager.Calculate(car, mad, roleFlag);
+            float currentReward = RewardManager.CalculateTicks(car, mad, roleFlag);
 
             // 2. Pack Telemetry
             float rank = (float)car.Placement / 10f; 
-            var packet = TelemetryMapper.Pack(car, mad, roleFlag, rank, currentReward);
+            var packet = TelemetryMapper.Pack(car, mad, stage, roleFlag, rank, currentReward);
 
             // 3. Serialize and Send
             byte[] buffer = StructToBytes(packet);

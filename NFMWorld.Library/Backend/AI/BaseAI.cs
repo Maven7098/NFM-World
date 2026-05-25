@@ -5,7 +5,7 @@
 /// </summary>
 public abstract class BaseAi
 {
-    public abstract void RunAi(IInGameCar car, int currentCarIndex);
+    public abstract void RunAi(IInGameCar car, IStage stage, int currentCarIndex);
 }
 
 // End of ReLitAi class

@@ -95,7 +95,7 @@ public class RaceGamemode(BaseGamemodeParameters gamemodeParameters, IRaceValues
             var inGameCar = carsInRace[i];
             if (inGameCar.Bot is { } bot)
             {
-                bot.RunAi(inGameCar, i);
+                bot.RunAi(inGameCar, currentStage, i);
             }
         }
 

@@ -8,10 +8,11 @@ namespace NFMWorldLibrary.Backend.AI
     // Can we add more dimensions to accommodate all car stats, since some stats are not currently included in the TelemetryPacket?
     public struct TelemetryPacket
     {
-        // Self State (7)
-        public float PosX, PosY, PosZ;
-        public float VelX, VelY, VelZ;
+        // Self State (10)
+        public float ForwardVel, RightVel, UpVel;
+        public float YawRate, PitchRate, RollRate;
         public float Speed;
+        public float PosX, PosY, PosZ;
 
         // Car Stats (23)
         // Is comprad and msquash needed?
@@ -42,12 +43,13 @@ namespace NFMWorldLibrary.Backend.AI
         public fix64 Dammult;
         public int Maxmag;
 
-        // Navigation (5)
-        // The AI should know the nearest track pieces, but the navigation node is not required.
-        // The AI only needs to know the distance to the nearest checkpoint.
-        // Even then, should the checkpoint be considered as just another track piece?
-        public float AngleToNode, DistanceToNode;
-        public float AngleToCheckpoint, DistanceToCheckpoint;
+        // Navigation (12)
+        public float CheckpointRelX, CheckpointRelY, CheckpointRelZ;
+        public float CheckpointAngle;
+        public float CheckpointDistance;
+        public float RampRelX, RampRelY, RampRelZ;
+        public float RampOrientation; 
+        public float RampDistance;
         public float GroundDistance;
 
         // Opponent Awareness (7)

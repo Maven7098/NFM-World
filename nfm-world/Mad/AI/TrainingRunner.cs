@@ -1,9 +1,9 @@
 using System;
-namespace NFMWorldLibrary.Backend;
+using NFMWorldLibrary;
+using NFMWorldLibrary.Backend;
 using NFMWorldLibrary.Backend.Gamemodes;
 using NFMWorldLibrary.Backend.AI;
 using NFMWorldLibrary.Util;
-using NFMWorldLibrary.Backend;
 
 namespace NFMWorld.Mad.AI
 {
@@ -20,7 +20,14 @@ namespace NFMWorld.Mad.AI
             // 3. Initialize your gamemode
             var parameters = new BaseGamemodeParameters()
             {
-                Players = [ new PlayerParameters() { CarName = carName } ]
+                PlayerCarIndex = 0,
+                Players = [ new PlayerParameters() 
+                { 
+                    PlayerName = "AI_Agent",
+                    CarName = carName,
+                    Color = new Color3(255, 255, 255),
+                    IsBot = false 
+                } ]
             };
 
             var raceValues = BackendRaceValues.Create(stagePath);
@@ -40,7 +47,7 @@ namespace NFMWorld.Mad.AI
             while (true)
             {
                 // 1. Invoke AI inference
-                pythonBridge.RunAi(playerCar, gamemode.playerCarIndex);
+                pythonBridge.RunAi(playerCar, gamemode.currentStage, gamemode.playerCarIndex);
 
                 // 2. Tick the game logic
                 gamemode.GameTick();

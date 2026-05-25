@@ -1,6 +1,7 @@
 ﻿using FixedMathSharp.Utility;
 using NFMWorldLibrary.Backend.Gamemodes;
 using NFMWorldLibrary.FixedMath;
+using NFMWorldLibrary.Util;
 
 namespace NFMWorldLibrary.Backend.AI;
 
@@ -55,7 +56,7 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
     /// <param name="u">Control output structure</param>
     /// <param name="position">Current race position</param>
     /// <param name="currentCarIndex">Index of the current car</param>
-    public override void RunAi(IInGameCar car, int currentCarIndex)
+    public override void RunAi(IInGameCar car, IStage stage, int currentCarIndex)
     {
         // Get current race state information
         var u = car.Control;
@@ -82,12 +83,12 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
             grounded = mad.Mtouch; // Use main/body touch otherwise
         }
 
-        FindDrivingTarget(car, rubberbandingFactor, mad, ref random);
+        FindDrivingTarget(car, stage, rubberbandingFactor, mad, ref random);
 
         if (grounded)
         {
             // Check if we're stuck against a wall
-            DetectAndAvoidObstacles(car, mad, racePhase.CurrentStage);
+            DetectAndAvoidObstacles(car, mad, stage);
             
             Steer(car, mad, u);
         }
@@ -186,20 +187,20 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
         return fix64.Sqrt(minDistSq);
     }
 
-    private void FindDrivingTarget(IInGameCar car, fix64 rubberbandingFactor, MadEngine mad, ref DeterministicRandom random)
+    private void FindDrivingTarget(IInGameCar car, IStage stage, fix64 rubberbandingFactor, MadEngine mad, ref DeterministicRandom random)
     {
         // If distance to target node <5000 units, target next node, except if the current node is a checkpoint
         var targetNodeIndex = _targetNode;
         if (targetNodeIndex < car.LastCheckpointNode + 1)
         {
             targetNodeIndex = car.LastCheckpointNode + 1;
-            if (targetNodeIndex >= racePhase.CurrentStage.nodes.Count)
+            if (targetNodeIndex >= stage.nodes.Count)
             {
                 targetNodeIndex = 0;
             }
         }
         // Sometimes there can be fix hoop nodes after the last checkpoint, so we need to skip those
-        var finalCheckpointNodeIndex = racePhase.CurrentStage.nodes.IndexOf(racePhase.CurrentStage.checkpoints[^1]);
+        var finalCheckpointNodeIndex = stage.nodes.IndexOf(stage.checkpoints[^1]);
         if (targetNodeIndex > finalCheckpointNodeIndex)
         {
             targetNodeIndex = 0;
@@ -214,17 +215,17 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
         // Check if we're close to any node ahead of _targetNode but before the next checkpoint
         // This allows the AI to naturally skip ahead when taking ramps or shortcuts
         var nextCheckpointIndex = car.CurrentCheckpoint;
-        var nextCheckpointNodeIndex = racePhase.CurrentStage.nodes.IndexOf(racePhase.CurrentStage.checkpoints[nextCheckpointIndex]);
+        var nextCheckpointNodeIndex = stage.nodes.IndexOf(stage.checkpoints[nextCheckpointIndex]);
         
         for (int i = targetNodeIndex + 1; i <= nextCheckpointNodeIndex; i++)
         {
             var nodeIndex = i;
-            if (nodeIndex >= racePhase.CurrentStage.nodes.Count)
+            if (nodeIndex >= stage.nodes.Count)
             {
-                nodeIndex -= racePhase.CurrentStage.nodes.Count;
+                nodeIndex -= stage.nodes.Count;
             }
             
-            var node = racePhase.CurrentStage.nodes[nodeIndex];
+            var node = stage.nodes[nodeIndex];
             var distanceToNodeSq = Pyo(car.Position.X, node.Position.X, car.Position.Z, node.Position.Z);
             
             // If we're close to this node (within speed-based threshold), advance target to it
@@ -237,17 +238,17 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
             }
         }
         
-        var targetNode = racePhase.CurrentStage.nodes[targetNodeIndex];
+        var targetNode = stage.nodes[targetNodeIndex];
         if (targetNode.Kind is not AiNodeKind.CheckPoint)
         {
             while (true)
             {
-                targetNode = racePhase.CurrentStage.nodes[targetNodeIndex];
+                targetNode = stage.nodes[targetNodeIndex];
                 if (targetNode.Kind is not AiNodeKind.Road and not AiNodeKind.CheckPoint and not AiNodeKind.Ramp
                     and not AiNodeKind.Halfpipe and not AiNodeKind.Auto)
                 {
                     targetNodeIndex++;
-                    if (targetNodeIndex >= racePhase.CurrentStage.nodes.Count)
+                    if (targetNodeIndex >= stage.nodes.Count)
                     {
                         targetNodeIndex = 0;
                     }
@@ -259,7 +260,7 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
                 if (distanceToTargetSq < (100 * car.Mad.Speed * car.Mad.Speed))
                 {
                     targetNodeIndex++;
-                    if (targetNodeIndex >= racePhase.CurrentStage.nodes.Count)
+                    if (targetNodeIndex >= stage.nodes.Count)
                     {
                         targetNodeIndex = 0;
                     }
@@ -279,28 +280,28 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
             var nodesToSkip = (int)(difficulty * 3 * (1 - rubberbandingFactor));
             for (int i = 0; i < nodesToSkip; i++)
             {
-                if (racePhase.CurrentStage.nodes[targetNodeIndex].Kind is AiNodeKind.Auto or AiNodeKind.Road or AiNodeKind.Ramp or AiNodeKind.Halfpipe)
+                if (stage.nodes[targetNodeIndex].Kind is AiNodeKind.Auto or AiNodeKind.Road or AiNodeKind.Ramp or AiNodeKind.Halfpipe)
                 {
                     // Do not skip ramps when low on power
-                    if (mad.Power < 80 && racePhase.CurrentStage.nodes[targetNodeIndex].Kind is AiNodeKind.Ramp or AiNodeKind.Halfpipe)
+                    if (mad.Power < 80 && stage.nodes[targetNodeIndex].Kind is AiNodeKind.Ramp or AiNodeKind.Halfpipe)
                     {
                         break;
                     }
 
                     targetNodeIndex++;
-                    if (targetNodeIndex >= racePhase.CurrentStage.nodes.Count)
+                    if (targetNodeIndex >= stage.nodes.Count)
                     {
                         targetNodeIndex = 0;
                     }
                 }
             }
 
-            if (racePhase.CurrentStage.nodes[targetNodeIndex].Kind is AiNodeKind.SequenceStart)
+            if (stage.nodes[targetNodeIndex].Kind is AiNodeKind.SequenceStart)
             {
                 // Find corresponding SequenceEnd node
-                for (int i = targetNodeIndex + 1; i < racePhase.CurrentStage.nodes.Count; i++)
+                for (int i = targetNodeIndex + 1; i < stage.nodes.Count; i++)
                 {
-                    if (racePhase.CurrentStage.nodes[i].Kind is AiNodeKind.SequenceEnd)
+                    if (stage.nodes[i].Kind is AiNodeKind.SequenceEnd)
                     {
                         sequence = new Sequence(targetNodeIndex, i, targetNodeIndex, false);
                         break;
@@ -312,7 +313,7 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
             var wantFix = mad.Hitmag > mad.Stat.Maxmag * (fix64)0.8f && random.NextFixed6401() < rubberbandingFactor;
             if (wantFix)
             {
-                var fixRoadStartNodes = racePhase.CurrentStage.nodes
+                var fixRoadStartNodes = stage.nodes
                     .Select((node, index) => (node, index))
                     .Where(n => n.node.Kind is AiNodeKind.FixRoadStart or AiNodeKind.FixRoadEnd)
                     .ToArray();
@@ -322,24 +323,24 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
                     targetFixRoadStartNode = fixRoadStartNodes[selectedIndex].index;
                     targetNodeIndex = targetFixRoadStartNode.Value;
 
-                    if (racePhase.CurrentStage.nodes[targetNodeIndex].Kind is AiNodeKind.FixRoadStart)
+                    if (stage.nodes[targetNodeIndex].Kind is AiNodeKind.FixRoadStart)
                     {
                         // Find corresponding FixRoadEnd node
-                        for (int i = targetNodeIndex + 1; i < racePhase.CurrentStage.nodes.Count; i++)
+                        for (int i = targetNodeIndex + 1; i < stage.nodes.Count; i++)
                         {
-                            if (racePhase.CurrentStage.nodes[i].Kind is AiNodeKind.FixRoadEnd)
+                            if (stage.nodes[i].Kind is AiNodeKind.FixRoadEnd)
                             {
                                 sequence = new Sequence(targetNodeIndex, i, targetNodeIndex, false);
                                 break;
                             }
                         }
                     }
-                    else if (racePhase.CurrentStage.nodes[targetNodeIndex].Kind is AiNodeKind.FixRoadEnd)
+                    else if (stage.nodes[targetNodeIndex].Kind is AiNodeKind.FixRoadEnd)
                     {
                         // Find corresponding FixRoadStart node and set up backwards traversal
                         for (int i = targetNodeIndex - 1; i >= 0; i--)
                         {
-                            if (racePhase.CurrentStage.nodes[i].Kind is AiNodeKind.FixRoadStart)
+                            if (stage.nodes[i].Kind is AiNodeKind.FixRoadStart)
                             {
                                 sequence = new Sequence(i, targetNodeIndex, i, true);
                                 break;
@@ -396,11 +397,11 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
             }
         }
 
-        FrameTrace.AddMessage($"Targeting node index: {targetNodeIndex}, Position: {racePhase.CurrentStage.nodes[targetNodeIndex].Position}, kind: {racePhase.CurrentStage.nodes[targetNodeIndex].Kind}");
-        FrameTrace.AddMessage($"Actual node target: {_targetNode}, Position: {racePhase.CurrentStage.nodes[_targetNode].Position}, kind: {racePhase.CurrentStage.nodes[_targetNode].Kind}");
+        FrameTrace.AddMessage($"Targeting node index: {targetNodeIndex}, Position: {stage.nodes[targetNodeIndex].Position}, kind: {stage.nodes[targetNodeIndex].Kind}");
+        FrameTrace.AddMessage($"Actual node target: {_targetNode}, Position: {stage.nodes[_targetNode].Position}, kind: {stage.nodes[_targetNode].Kind}");
         FrameTrace.AddMessage($"Sequence: {sequence}");
         FrameTrace.AddMessage($"targetFixRoadStartNode: {targetFixRoadStartNode}");
-        Target(car, racePhase.CurrentStage.nodes[targetNodeIndex].Position);
+        Target(car, stage.nodes[targetNodeIndex].Position);
     }
 
     private void Steer(IInGameCar car, MadEngine mad, Control u)
