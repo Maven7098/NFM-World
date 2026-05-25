@@ -1,4 +1,6 @@
-﻿using NFMWorldLibrary.Backend.Gamemodes;
+﻿using FixedMathSharp.Utility;
+using NFMWorldLibrary.Backend.Gamemodes;
+using NFMWorldLibrary.FixedMath;
 
 namespace NFMWorldLibrary.Backend.AI;
 

@@ -103,7 +103,7 @@ public partial class Lua
     //     lua_setglobal(L, "phase");
     // }
 
-    private void PushFix64InlineArray4(lua_State L, MadEngine mad, Func<Mad, InlineArray4<fix64>> getter)
+    private void PushFix64InlineArray4(lua_State L, MadEngine mad, Func<MadEngine, InlineArray4<fix64>> getter)
     {
         throw new NotImplementedException();
     }
