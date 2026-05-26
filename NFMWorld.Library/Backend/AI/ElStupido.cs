@@ -13,7 +13,7 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
     /// Pythagorean distance squared calculation (integer version).
     /// Used for fast distance comparisons without square root.
     /// </summary>
-    private static int pyo(int x1, int x2, int z1, int z2) {
+    private static int Pyo(int x1, int x2, int z1, int z2) {
         return (((x1 - x2) * (x1 - x2)) + ((z1 - z2) * (z1 - z2)));
     }
     
@@ -21,7 +21,7 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
     /// Pythagorean distance squared calculation (fixed-point version).
     /// Used for fast distance comparisons without square root.
     /// </summary>
-    private static fix64 pyo(fix64 x1, fix64 x2, fix64 z1, fix64 z2)
+    private static fix64 Pyo(fix64 x1, fix64 x2, fix64 z1, fix64 z2)
     {
         var a = (x1 - x2);
         var b = (z1 - z2);
@@ -97,7 +97,7 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
     /// Detects when the car is stuck against a wall and applies avoidance steering.
     /// Checks if the car has low speed despite throttle input, indicating a collision.
     /// </summary>
-    private void DetectAndAvoidObstacles(IInGameCar car, Mad mad, IStage stage)
+    private void DetectAndAvoidObstacles(IInGameCar car, MadEngine mad, IStage stage)
     {
         // Decrease avoidance timer
         if (_avoidanceTimer > 0)
@@ -175,7 +175,7 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
         
         foreach (var node in stage.nodes)
         {
-            var distSq = pyo(targetX, node.Position.X, targetZ, node.Position.Z);
+            var distSq = Pyo(targetX, node.Position.X, targetZ, node.Position.Z);
             if (distSq < minDistSq)
             {
                 minDistSq = distSq;
@@ -186,7 +186,7 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
         return fix64.Sqrt(minDistSq);
     }
 
-    private void FindDrivingTarget(IInGameCar car, fix64 rubberbandingFactor, Mad mad, ref DeterministicRandom random)
+    private void FindDrivingTarget(IInGameCar car, fix64 rubberbandingFactor, MadEngine mad, ref DeterministicRandom random)
     {
         // If distance to target node <5000 units, target next node, except if the current node is a checkpoint
         var targetNodeIndex = _targetNode;
@@ -213,7 +213,7 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
         
         // Check if we're close to any node ahead of _targetNode but before the next checkpoint
         // This allows the AI to naturally skip ahead when taking ramps or shortcuts
-        var nextCheckpointIndex = car.currentCheckpoint;
+        var nextCheckpointIndex = car.CurrentCheckpoint;
         var nextCheckpointNodeIndex = racePhase.CurrentStage.nodes.IndexOf(racePhase.CurrentStage.checkpoints[nextCheckpointIndex]);
         
         for (int i = targetNodeIndex + 1; i <= nextCheckpointNodeIndex; i++)
@@ -225,7 +225,7 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
             }
             
             var node = racePhase.CurrentStage.nodes[nodeIndex];
-            var distanceToNodeSq = pyo(car.Position.X, node.Position.X, car.Position.Z, node.Position.Z);
+            var distanceToNodeSq = Pyo(car.Position.X, node.Position.X, car.Position.Z, node.Position.Z);
             
             // If we're close to this node (within speed-based threshold), advance target to it
             if (distanceToNodeSq < (200 * mad.Speed * mad.Speed))
@@ -255,7 +255,7 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
                     continue;
                 }
 
-                var distanceToTargetSq = pyo(car.Position.X, targetNode.Position.X, car.Position.Z, targetNode.Position.Z);
+                var distanceToTargetSq = Pyo(car.Position.X, targetNode.Position.X, car.Position.Z, targetNode.Position.Z);
                 if (distanceToTargetSq < (100 * car.Mad.Speed * car.Mad.Speed))
                 {
                     targetNodeIndex++;
@@ -403,7 +403,7 @@ public class ElStupido(BaseGamemode gamemode, IRaceValues racePhase) : BaseAi
         Target(car, racePhase.CurrentStage.nodes[targetNodeIndex].Position);
     }
 
-    private void Steer(IInGameCar car, Mad mad, Control u)
+    private void Steer(IInGameCar car, MadEngine mad, Control u)
     {
         // Reset input controls
         u.Up = false;

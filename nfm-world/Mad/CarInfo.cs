@@ -1,20 +1,8 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using NFMWorldLibrary;
-using NFMWorldLibrary.Rad;
+﻿namespace NFMWorld;
 
-namespace NFMWorld;
-
-public class CarMesh : Mesh
+public class CarMesh(GraphicsDevice graphicsDevice, Rad3d rad) : Mesh(graphicsDevice, rad)
 {
-    public CarStats Stats;
-    public Rad3dWheelDef[] Wheels;
-    public Rad3dRimsDef? Rims;
-
-    public CarMesh(GraphicsDevice graphicsDevice, Rad3d rad) : base(graphicsDevice, rad)
-    {
-        Stats = CarStats.ValidateStats(rad.Stats, rad.FileName);
-
-        Wheels = rad.Wheels;
-        Rims = rad.Rims;
-    }
+    public CarStats Stats = CarStats.ValidateStats(rad.Stats, rad.FileName);
+    public Rad3dWheelDef[] Wheels = rad.Wheels;
+    public Rad3dRimsDef? Rims = rad.Rims;
 }

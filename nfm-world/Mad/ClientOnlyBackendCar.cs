@@ -1,8 +1,4 @@
-﻿using NFMWorldLibrary;
-using NFMWorldLibrary.FixedMath;
-using NFMWorldLibrary.Rad;
-
-namespace NFMWorld;
+﻿namespace NFMWorld;
 
 public class ClientOnlyBackendCar(Rad3d rad) : ICar
 {

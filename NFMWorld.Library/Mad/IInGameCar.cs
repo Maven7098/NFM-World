@@ -6,9 +6,9 @@ namespace NFMWorldLibrary;
 
 public interface IInGameCar : ICar
 {
-    Mad Mad { get; }
+    MadEngine Mad { get; }
     Control Control { get; }
-    ushort currentCheckpoint { get; set; }
+    ushort CurrentCheckpoint { get; set; }
     byte currentLap { get; set; } // mad.nlaps
     int totalCheckpoint { get; set; } // mad.clear
     int lastCheckpointNode { get; set; } // resets on new lap
