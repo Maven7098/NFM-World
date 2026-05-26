@@ -2278,7 +2278,7 @@ namespace NFMWorldLibrary
                                         var surfaceY = fix64.Abs(normalizedNormal.Y) > (fix64)1e-6
                                             ? p0.Y - (normalizedNormal.X * (localPosition.X - p0.X) + normalizedNormal.Z * (localPosition.Z - p0.Z)) / normalizedNormal.Y
                                             : 999;
-                                        Logging.Info($"TRI[{i/3}] p0=({(float)p0.X:F0},{(float)p0.Y:F0},{(float)p0.Z:F0}) inTri={inTri} surfY={(float)surfaceY:F0} localWheel=({(float)localPosition.X:F0},{(float)localPosition.Y:F0},{(float)localPosition.Z:F0})");
+                                        // Logging.Info($"TRI[{i/3}] p0=({(float)p0.X:F0},{(float)p0.Y:F0},{(float)p0.Z:F0}) inTri={inTri} surfY={(float)surfaceY:F0} localWheel=({(float)localPosition.X:F0},{(float)localPosition.Y:F0},{(float)localPosition.Z:F0})");
                                     }
                                 }
                             
@@ -2287,9 +2287,9 @@ namespace NFMWorldLibrary
                                 {
                                     if (TriangleMesh.ResolveGround(p0, p1, p2, localPosition, triangleData) is { } groundHit)
                                     {
-                                        Logging.Info(triangleData.IsGround
-                                            ? $"ground triangle (normal {(float)normalizedNormal.X:F2}, {(float)normalizedNormal.Y:F2}, {(float)normalizedNormal.Z:F2}, groundness {(float)groundness:F2})"
-                                            : $"wall triangle (normal {(float)normalizedNormal.X:F2}, {(float)normalizedNormal.Y:F2}, {(float)normalizedNormal.Z:F2})");
+                                        // Logging.Info(triangleData.IsGround
+                                        //    ? $"ground triangle (normal {(float)normalizedNormal.X:F2}, {(float)normalizedNormal.Y:F2}, {(float)normalizedNormal.Y:F2}, groundness {(float)groundness:F2})"
+                                        //    : $"wall triangle (normal {(float)normalizedNormal.X:F2}, {(float)normalizedNormal.Y:F2}, {(float)normalizedNormal.Y:F2})");
 
                                         touching |= 1 << k;
                                         ++nGroundedWheels;
@@ -2304,7 +2304,7 @@ namespace NFMWorldLibrary
                                             var rampAngleDeg = fix64.Acos(fix64.Clamp(triangleData.Groundness, -1, 1)) * fix64.RadToDeg;
                                             var liftDivider = 1 + (50 - fix64.Abs(rampAngleDeg)) / (fix64)30;
                                             if (liftDivider < 4) liftDivider = 4;
-                                            Logging.Info($"ramp lift: {zTmp} liftDivider: {liftDivider:F2} total: {zTmp / liftDivider:F2}");
+                                            // Logging.Info($"ramp lift: {zTmp} liftDivider: {liftDivider:F2} total: {zTmp / liftDivider:F2}");
                                             Scy[k] -= zTmp / liftDivider;
                                         }
 
@@ -2333,9 +2333,9 @@ namespace NFMWorldLibrary
                                     // Wall triangle: horizontal push-back (in local space, then rotate back)
                                     if (TriangleMesh.ResolveWall(p0, p1, p2, localPosition, localVelocity, triangleData) is { } wallHit)
                                     {
-                                        Logging.Info(triangleData.IsGround
-                                            ? $"ground triangle (normal {(float)normalizedNormal.X:F2}, {(float)normalizedNormal.Y:F2}, {(float)normalizedNormal.Z:F2}, groundness {(float)groundness:F2})"
-                                            : $"wall triangle (normal {(float)normalizedNormal.X:F2}, {(float)normalizedNormal.Y:F2}, {(float)normalizedNormal.Z:F2})");
+                                        // Logging.Info(triangleData.IsGround
+                                        //    ? $"ground triangle (normal {(float)normalizedNormal.X:F2}, {(float)normalizedNormal.Y:F2}, {(float)normalizedNormal.Y:F2}, groundness {(float)groundness:F2})"
+                                        //    : $"wall triangle (normal {(float)normalizedNormal.X:F2}, {(float)normalizedNormal.Y:F2}, {(float)normalizedNormal.Y:F2})");
 
                                         // Rotate local-space push/impact back to world space
                                         var worldDelta = wallHit.positionDelta.RotateXz(collidable.GameObjectXz);

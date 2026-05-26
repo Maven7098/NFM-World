@@ -67,6 +67,9 @@ namespace NFMWorld.MadEngine.AI
                     gamemode.Reset();
                     pythonBridge.ResetRequested = false;
                 }
+
+                // Give some room for the OS and UDP processing
+                System.Threading.Thread.Sleep(1);
             }
         }
     }

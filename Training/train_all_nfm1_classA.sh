@@ -35,8 +35,8 @@ for CAR in "${CARS[@]}"; do
 
         # 1. Start C# Training App in the background
         # Redirect output to a log file or /dev/null to keep console clean
-        dotnet run --project TrainingApp/TrainingApp.csproj "$CAR" "$STAGE" > "training_log_${STAGE//\//_}.txt" 2>&1 &
-        CS_PID=$!
+        dotnet TrainingApp/bin/Release/net10.0/TrainingApp.dll "$CAR" "$STAGE" > "training_log_${STAGE//\//_}.txt" 2>&1 &
+    CS_PID=$!
 
         # 2. Run Python Training
         # train.py will finish after the total_timesteps set in the script

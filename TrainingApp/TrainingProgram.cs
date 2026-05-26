@@ -21,6 +21,9 @@ namespace NFMWorld.MadEngine.AI
 
             var runner = new TrainingRunner();
             runner.StartTraining(ip, port, car, stage);
+
+            // Force exit to ensure background threads don't keep the process alive
+            Environment.Exit(0);
         }
     }
 }

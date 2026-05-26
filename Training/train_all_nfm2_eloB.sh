@@ -21,23 +21,23 @@ CARS=(
     "elo/b_bw_soj.rad"
 )
 STAGES=(
-    "1_introductory.txt"
-    "2_letthedream.txt"
-    "3_arrested.txt"
-    "4_twisted.txt"
-    "5_centrifugal.txt"
-    "6_stretch.txt"
-    "7_garden.txt"
-    "8_maximum.txt"
-    "9_majestic.txt"
-    "10_ghosts.txt"
-    "11_rolling.txt"
-    "12_santas.txt"
-    "13_diggers.txt"
-    "14_gunrun.txt"
-    "15_dwm.txt"
-    "16_4dv.txt"
-    "17_madparty.txt"
+    "nfm2/1_introductory.txt"
+    "nfm2/2_letthedream.txt"
+    "nfm2/3_arrested.txt"
+    "nfm2/4_twisted.txt"
+    "nfm2/5_centrifugal.txt"
+    "nfm2/6_stretch.txt"
+    "nfm2/7_garden.txt"
+    "nfm2/8_maximum.txt"
+    "nfm2/9_majestic.txt"
+    "nfm2/10_ghosts.txt"
+    "nfm2/11_rolling.txt"
+    "nfm2/12_santas.txt"
+    "nfm2/13_diggers.txt"
+    "nfm2/14_gunrun.txt"
+    "nfm2/15_dwm.txt"
+    "nfm2/16_4dv.txt"
+    "nfm2/17_madparty.txt"
 )
 
 # Move to project root
@@ -51,8 +51,8 @@ for CAR in "${CARS[@]}"; do
 
         # 1. Start C# Training App in the background
         # Redirect output to a log file or /dev/null to keep console clean
-        dotnet run --project TrainingApp/TrainingApp.csproj "$CAR" "$STAGE" > "training_log_${STAGE//\//_}.txt" 2>&1 &
-        CS_PID=$!
+        dotnet TrainingApp/bin/Release/net10.0/TrainingApp.dll "$CAR" "$STAGE" > "training_log_${STAGE//\//_}.txt" 2>&1 &
+    CS_PID=$!
 
         # 2. Run Python Training
         # train.py will finish after the total_timesteps set in the script

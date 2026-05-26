@@ -113,10 +113,13 @@ class NfmEnv(gym.Env):
 
     def close(self):
         # Send special 0xFE Shutdown Command to C#
+        # Send it multiple times because UDP is unreliable
         if self.last_addr:
-            try:
-                self.socket.sendto(bytes([0xFE]), self.last_addr)
-                print("Sent shutdown signal to NFM-World.")
-            except:
-                pass
+            for _ in range(10):
+                try:
+                    self.socket.sendto(bytes([0xFE]), self.last_addr)
+                    time.sleep(0.01)
+                except:
+                    pass
+            print("Sent shutdown signal to NFM-World.")
         self.socket.close()
