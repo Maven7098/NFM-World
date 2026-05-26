@@ -25,6 +25,8 @@ replay_pid*
 
 # data for training
 data/*
+training_log_*.txt
+ppo_nfm_tensorboard/*
 
 **/obj
 **/bin
