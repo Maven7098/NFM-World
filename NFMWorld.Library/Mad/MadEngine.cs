@@ -2240,7 +2240,7 @@ namespace NFMWorldLibrary
             
                 if (!isWheelTouchingPiece[k])
                 {
-                    Logging.Info("start wheel");
+                    // Logging.Info("start wheel");
                     foreach (var collidable in stage.RetrievePointCollidables(wheelx[k], wheelz[k]))
                     {
                         if (collidable.CollisionMesh is { } collisionMesh)

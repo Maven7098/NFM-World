@@ -50,6 +50,8 @@ def train():
     except KeyboardInterrupt:
         print("\nTraining interrupted. Saving current progress...")
         model.save(f"{model_path}-interrupted")
+    finally:
+        env.close()
 
 if __name__ == "__main__":
     train()
