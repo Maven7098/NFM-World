@@ -40,6 +40,8 @@ namespace NFMWorld.MadEngine.AI
             // Register the RewardManager to send rewards through the pythonBridge
             RewardManager.Initialize(reward => pythonBridge.Send($"REWARD:{reward}"));
 
+            gamemode.Reset();
+
             // 5. Start the high-speed training loop
             Console.WriteLine($"Starting training loop with Car: {carName}, Stage: {stagePath}...");
             var playerCar = gamemode.carsInRace[gamemode.playerCarIndex];

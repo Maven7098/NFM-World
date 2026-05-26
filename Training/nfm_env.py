@@ -17,9 +17,9 @@ class NfmEnv(gym.Env):
         self.socket.settimeout(5.0) # Timeout if game crashes
         self.last_addr = None
         
-        # 57 features (as defined in C# TelemetryPacket struct)
-        # Self(10) + Stats(24) + Nav(12) + Opp(7) + Meta(4) = 57
-        self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(57,), dtype=np.float32)
+        # 56 features (as defined in C# TelemetryPacket struct)
+        # Self(10) + Stats(24) + Nav(11) + Opp(7) + Meta(4) = 56
+        self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(56,), dtype=np.float32)
         
         # 5 bits for controls = 32 discrete actions
         self.action_space = spaces.Discrete(32)
@@ -27,10 +27,10 @@ class NfmEnv(gym.Env):
         # Struct format: 
         # Self: 10f
         # Stats: 3i (Swits), 3q (Acelf), i (Handb), q (Airs), i (Airc), i (Turn), 6q (Stats), 6i (Stats), q (DamMult), i (MaxMag)
-        # Nav: 12f
+        # Nav: 11f
         # Opp: 7f
         # Meta: 4f
-        self.struct_format = '<10f 3i 3q i q i i 6q 6i q i 12f 7f 4f'
+        self.struct_format = '<10f 3i 3q i q i i 6q 6i q i 11f 7f 4f'
         self.struct_size = struct.calcsize(self.struct_format)
 
     def _unpack_telemetry(self, data):
@@ -69,20 +69,20 @@ class NfmEnv(gym.Env):
             self.socket.setblocking(True)
         except socket.timeout:
             print("Timed out waiting for C# telemetry...")
-            return np.zeros(57), 0, True, False, {}
+            return np.zeros(56), 0, True, False, {}
 
         if data is None:
-             return np.zeros(57), 0, True, False, {}
+             return np.zeros(56), 0, True, False, {}
 
         # 3. Unpack
         obs = self._unpack_telemetry(data)
         
-        # 4. Get Reward from Meta State (index 56)
-        reward = obs[56]
+        # 4. Get Reward from Meta State (index 55)
+        reward = obs[55]
         
-        # 5. Determine termination (index 55 is Damage, index 33 is MaxMag)
+        # 5. Determine termination (index 54 is Damage, index 33 is MaxMag)
         # If Damage >= MaxMag, the car is wasted.
-        terminated = obs[55] >= obs[33] and obs[33] > 0
+        terminated = obs[54] >= obs[33] and obs[33] > 0
         
         # If we got a massive negative reward, consider it a crash/reset
         if reward < -90:
