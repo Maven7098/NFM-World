@@ -55,7 +55,13 @@ namespace NFMWorld.MadEngine.AI
                 // 2. Tick the game logic
                 gamemode.GameTick();
 
-                // 3. Handle External Reset Request (e.g., from Python)
+                // 3. Handle External Commands
+                if (pythonBridge.ShutdownRequested)
+                {
+                    Console.WriteLine("Shutdown signal received from Python. Exiting...");
+                    break;
+                }
+                
                 if (pythonBridge.ResetRequested)
                 {
                     gamemode.Reset();

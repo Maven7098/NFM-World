@@ -112,4 +112,11 @@ class NfmEnv(gym.Env):
                 continue
 
     def close(self):
+        # Send special 0xFE Shutdown Command to C#
+        if self.last_addr:
+            try:
+                self.socket.sendto(bytes([0xFE]), self.last_addr)
+                print("Sent shutdown signal to NFM-World.")
+            except:
+                pass
         self.socket.close()

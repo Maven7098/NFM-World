@@ -12,6 +12,7 @@ namespace NFMWorldLibrary.Backend.AI
         private readonly IPEndPoint _remoteEndPoint;
         private ITrackableRun? _runAdapter;
         public bool ResetRequested { get; set; }
+        public bool ShutdownRequested { get; set; }
 
         public PythonBridgeAi(string ipAddress, int port)
         {
@@ -63,14 +64,18 @@ namespace NFMWorldLibrary.Backend.AI
                 byte[] data = _udpClient.Receive(ref from);
                 if (data.Length == 1)
                 {
-                    byte action = data[0];
-                    if (action == 0xFF) // Special Reset Command
+                    byte command = data[0];
+                    if (command == 0xFF) // Reset
                     {
                         ResetRequested = true;
                     }
+                    else if (command == 0xFE) // Shutdown/Exit
+                    {
+                        ShutdownRequested = true;
+                    }
                     else
                     {
-                        ApplyControls(car, action);
+                        ApplyControls(car, command);
                     }
                 }
             }
