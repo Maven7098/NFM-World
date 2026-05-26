@@ -1,0 +1,7 @@
+            if (CheckPoints.Nfix == 4)
+            {
+                _fixes = 1;
+            }*/
+        }
+    }
+}

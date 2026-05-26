@@ -1,33 +1,33 @@
 from gymnasium.envs.registration import register
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
+from stable_baselines3.common.monitor import Monitor
 import gymnasium as gym
 import os
 
 # Register the environment
-# Pointing to nfm_env.py in the same directory
 register(
     id='NFMRacer-v1',
     entry_point='nfm_env:NfmEnv',
 )
 
 def train():
-    # Create the environment
-    # Note: Ensure the C# game is running and ready to send UDP packets
+    # Create and wrap the environment
     env = gym.make("NFMRacer-v1", ip="127.0.0.1", port=9000)
+    env = Monitor(env, "./ppo_nfm_tensorboard/") # Monitor logs episode stats
 
     # Instantiate the model
-    # We use a slightly larger network (256x256) to handle the 57 features
+    # Reduced n_steps from 2048 to 512 so it logs 4x more frequently
     model = PPO(
         policy="MlpPolicy",
         env=env,
-        n_steps=2048,
-        batch_size=128,
+        n_steps=512, 
+        batch_size=64,
         n_epochs=10,
         gamma=0.99,
         gae_lambda=0.95,
         clip_range=0.2,
-        ent_coef=0.01, # Encourage exploration
+        ent_coef=0.01,
         verbose=1,
         tensorboard_log="./ppo_nfm_tensorboard/"
     )

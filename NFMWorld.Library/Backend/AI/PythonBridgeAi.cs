@@ -11,6 +11,7 @@ namespace NFMWorldLibrary.Backend.AI
         private readonly UdpClient _udpClient = new();
         private readonly IPEndPoint _remoteEndPoint;
         private ITrackableRun? _runAdapter;
+        public bool ResetRequested { get; set; }
 
         public PythonBridgeAi(string ipAddress, int port)
         {
@@ -25,41 +26,52 @@ namespace NFMWorldLibrary.Backend.AI
 
         public void Send(string message)
         {
+            // Note: Sending strings might crash the current Python script 
+            // if it expects a fixed-size binary structure.
             byte[] buffer = Encoding.UTF8.GetBytes(message);
             _udpClient.Send(buffer, buffer.Length, _remoteEndPoint);
         }
 
         private void OnRunFinished(object? sender, RunFinishedEventArgs e)
         {
-            float completionReward = e.Success ? 500.0f : -100.0f;
-            Send($"REWARD:{completionReward}");
+            // Instead of sending a string, we set a flag to reset or could pack a special terminal packet
+            // For now, let's just mark that the run is done if we want to force a reset from C# side
+            // or let the Python side detect termination via telemetry.
         }
 
         public override void RunAi(IInGameCar car, IStage stage, int currentCarIndex)
         {
             var mad = car.Mad;
             
-            // 1. Calculate Reward
-            float roleFlag = 0; // Default to Racer for now
-            float currentReward = RewardManager.CalculateTicks(car, mad, roleFlag);
+            // 1. Calculate Reward and normalize by Physics Speedup
+            float roleFlag = 0; 
+            float rawReward = RewardManager.CalculateTicks(car, mad, roleFlag);
+            float normalizedReward = rawReward * (float)Physics.PHYSICS_MULTIPLIER;
 
             // 2. Pack Telemetry
             float rank = (float)car.Placement / 10f; 
-            var packet = TelemetryMapper.Pack(car, mad, stage, roleFlag, rank, currentReward);
+            var packet = TelemetryMapper.Pack(car, mad, stage, roleFlag, rank, normalizedReward);
 
             // 3. Serialize and Send
             byte[] buffer = StructToBytes(packet);
             _udpClient.Send(buffer, buffer.Length, _remoteEndPoint);
 
-            // 4. Receive Controls (Non-blocking)
-            if (_udpClient.Available > 0)
+            // 4. Receive Controls & Commands (Non-blocking)
+            while (_udpClient.Available > 0)
             {
                 IPEndPoint from = new IPEndPoint(IPAddress.Any, 0);
                 byte[] data = _udpClient.Receive(ref from);
-                if (data.Length > 0)
+                if (data.Length == 1)
                 {
                     byte action = data[0];
-                    ApplyControls(car, action);
+                    if (action == 0xFF) // Special Reset Command
+                    {
+                        ResetRequested = true;
+                    }
+                    else
+                    {
+                        ApplyControls(car, action);
+                    }
                 }
             }
         }

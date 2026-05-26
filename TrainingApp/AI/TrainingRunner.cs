@@ -44,15 +44,23 @@ namespace NFMWorld.MadEngine.AI
 
             // 5. Start the high-speed training loop
             Console.WriteLine($"Starting training loop with Car: {carName}, Stage: {stagePath}...");
-            var playerCar = gamemode.carsInRace[gamemode.playerCarIndex];
             
             while (true)
             {
+                var playerCar = gamemode.carsInRace[gamemode.playerCarIndex];
+
                 // 1. Invoke AI inference
                 pythonBridge.RunAi(playerCar, gamemode.currentStage, gamemode.playerCarIndex);
 
                 // 2. Tick the game logic
                 gamemode.GameTick();
+
+                // 3. Handle External Reset Request (e.g., from Python)
+                if (pythonBridge.ResetRequested)
+                {
+                    gamemode.Reset();
+                    pythonBridge.ResetRequested = false;
+                }
             }
         }
     }

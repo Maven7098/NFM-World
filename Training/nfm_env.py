@@ -57,38 +57,46 @@ class NfmEnv(gym.Env):
         # 2. Receive latest telemetry (flush buffer to get fresh state)
         data = None
         try:
+            # We want the MOST RECENT packet to avoid lag
+            self.socket.setblocking(False)
             while True:
-                packet, addr = self.socket.recvfrom(self.struct_size + 1024)
-                data = packet
-                self.last_addr = addr
-                # If we're getting packets faster than we can process, 
-                # we only want the most recent one.
-                if self.socket.gettimeout() is not None:
-                    self.socket.setblocking(False)
-        except BlockingIOError:
+                try:
+                    packet, addr = self.socket.recvfrom(self.struct_size + 1024)
+                    data = packet
+                    self.last_addr = addr
+                except BlockingIOError:
+                    break
             self.socket.setblocking(True)
+            
+            # If no data was available in the buffer, wait for one
+            if data is None:
+                data, addr = self.socket.recvfrom(self.struct_size + 1024)
+                self.last_addr = addr
+
         except socket.timeout:
             print("Timed out waiting for C# telemetry...")
             return np.zeros(56), 0, True, False, {}
-
-        if data is None:
-             return np.zeros(56), 0, True, False, {}
 
         # 3. Unpack
         obs = self._unpack_telemetry(data)
         
         # 4. Get Reward from Meta State (index 55)
-        reward = obs[55]
+        reward = float(obs[55])
         
-        # 5. Determine termination (index 54 is Damage, index 33 is MaxMag)
-        # If Damage >= MaxMag, the car is wasted.
-        terminated = obs[54] >= obs[33] and obs[33] > 0
+        # 5. Determine termination
+        # index 54 is Damage, index 33 is MaxMag
+        is_wasted = obs[54] >= obs[33] and obs[33] > 0
         
-        # If we got a massive negative reward, consider it a crash/reset
-        if reward < -90:
-            terminated = True
+        # Check for lap completion (index 41 is CheckpointDistance, but we can use Meta state or rewards)
+        # If RewardManager sends a huge reward for finishing, we can detect it.
+        # However, it's safer to check if the gamemode finished.
+        # Let's assume for now that a huge reward or being wasted ends the episode.
+        terminated = is_wasted or reward < -90 or reward > 400
+        
+        # Truncated is used for time limits, usually False unless we implement a step limit
+        truncated = False 
 
-        return obs, reward, terminated, False, {}
+        return obs, reward, terminated, truncated, {}
 
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
