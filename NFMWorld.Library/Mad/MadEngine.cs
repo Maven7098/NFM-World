@@ -108,11 +108,11 @@ namespace NFMWorldLibrary
         internal int Mtcount = 0;
         internal fix64 py = 0;
 
-        public event EventHandler<(float f, int i)> SfxPlayCrash;
-        public event EventHandler<(int i, float f)> SfxPlaySkid;
-        public event EventHandler<(int i, int i2, int i3)> SfxPlayScrape;
-        public event EventHandler<(int i, int i2, int i3)> SfxPlayGscrape;
-        public event EventHandler<float> PowerUp;
+        public event EventHandler<(float f, int i)>? SfxPlayCrash;
+        public event EventHandler<(int i, float f)>? SfxPlaySkid;
+        public event EventHandler<(int i, int i2, int i3)>? SfxPlayScrape;
+        public event EventHandler<(int i, int i2, int i3)>? SfxPlayGscrape;
+        public event EventHandler<float>? PowerUp;
 
         // private InlineArray2<CollisionSubstep> collisionSubsteps;
         // private bool collisionSubstepSwitch; // if false: [0] is current, if true: [1] is current
@@ -422,7 +422,7 @@ namespace NFMWorldLibrary
             return bottomy;
         }
 
-        public event EventHandler Distruct;
+        public event EventHandler? Distruct;
 
         public void bounceRebound(int wi, ContO conto, DeterministicRandom random)
         {
@@ -1262,7 +1262,7 @@ namespace NFMWorldLibrary
                                     f42 * Stat.Simag, (int)_tilt, BadLanding && Mtouch, wheelGround);
                                 if ( /*Im == XTGraphics.Im &&*/ !BadLanding)
                                 {
-                                    SfxPlaySkid(this, (surfaceType, (float)fix64.Sqrt(Scx[j] * Scx[j] + Scz[j] * Scz[j])));
+                                    SfxPlaySkid?.Invoke(this, (surfaceType, (float)fix64.Sqrt(Scx[j] * Scx[j] + Scz[j] * Scz[j])));
                                     //XTPart2.Skidf(Im, i32,
                                     //    (fix64) Math.Sqrt(Scx[i41] * Scx[i41] + Scz[i41] * Scz[i41]));
                                 }
@@ -1712,7 +1712,7 @@ namespace NFMWorldLibrary
             } // CHK15
             if (Hitmag >= Stat.Maxmag && !Wasted)
             {
-                Distruct(this, EventArgs.Empty);
+                Distruct?.Invoke(this, EventArgs.Empty);
                 if (Cntdest == 7)
                 {
                     Wasted = true;
@@ -2352,7 +2352,7 @@ namespace NFMWorldLibrary
                                         {
                                             conto.Spark(wheelx[k], wheely[k], wheelz[k], Scx[k], Scy[k], Scz[k], 0,
                                                 (int)wheelGround);
-                                            SfxPlayScrape(this, ((int)Scx[k], (int)Scy[k], (int)Scz[k]));
+                                            SfxPlayScrape?.Invoke(this, ((int)Scx[k], (int)Scy[k], (int)Scz[k]));
                                         }
 
                                         var reboundVelocityDelta = worldImpact * (-GetReboundMul(wasMtouch));
@@ -2398,7 +2398,7 @@ namespace NFMWorldLibrary
                                 {
                                     conto.Spark(wheelx[k], wheely[k], wheelz[k], Scx[k], Scy[k], Scz[k], 1, (int)wheelGround);
                                     //if (Im == /*this.xt.im*/ 0)
-                                    SfxPlayGscrape(this, ((int)Scx[k], (int)Scy[k], (int)Scz[k]));
+                                    SfxPlayGscrape?.Invoke(this, ((int)Scx[k], (int)Scy[k], (int)Scz[k]));
                                 }
 
                                 bounceRebound(k, conto, random);
@@ -2425,7 +2425,7 @@ namespace NFMWorldLibrary
                                 {
                                     conto.Spark(wheelx[k], wheely[k], wheelz[k], Scx[k], Scy[k], Scz[k], 0, (int)wheelGround);
                                     //if (Im == /*this.xt.im*/ 0)
-                                    SfxPlayScrape(this, ((int)Scx[k], (int)Scy[k], (int)Scz[k]));
+                                    SfxPlayScrape?.Invoke(this, ((int)Scx[k], (int)Scy[k], (int)Scz[k]));
                                 }
 
                                 // z rebound CHK5
@@ -2471,7 +2471,7 @@ namespace NFMWorldLibrary
                                     {
                                         conto.Spark(wheelx[k], wheely[k], wheelz[k], Scx[k], Scy[k], Scz[k], 1, (int)wheelGround);
                                         //if (Im == /*this.xt.im*/ 0)
-                                        SfxPlayGscrape(this, ((int)Scx[k], (int)Scy[k], (int)Scz[k]));
+                                        SfxPlayGscrape?.Invoke(this, ((int)Scx[k], (int)Scy[k], (int)Scz[k]));
                                     }
 
                                     if (!wasMtouch && surfaceType != 0)
@@ -2540,7 +2540,7 @@ namespace NFMWorldLibrary
                 Shakedam = (int)((fix64.Abs(f) + Shakedam) * fix64.Half);
                 if (/*Im == XTGraphics.Im*/true || _colidim)
                 {
-                    SfxPlayCrash(this, ((int)f, 0));
+                    SfxPlayCrash?.Invoke(this, ((int)f, 0));
                     //XTGraphics.Acrash(Im, f, 0);
                 }
                 for (var i111 = 0; i111 < 40; i111++)
@@ -2621,7 +2621,7 @@ namespace NFMWorldLibrary
             
                 if (/*Im == XTGraphics.Im ||*/true || _colidim)
                 {
-                    SfxPlayCrash(this, ((int)f, i99 * i98));
+                    SfxPlayCrash?.Invoke(this, ((int)f, i99 * i98));
                     //XTGraphics.Acrash(Im, f, i99 * i98);
                 }
                 if (i99 * i98 == 0 || Mtouch)
@@ -2706,7 +2706,7 @@ namespace NFMWorldLibrary
             
                 if (/*Im == XTGraphics.Im ||*/true || _colidim)
                 {
-                    SfxPlayCrash(this, ((int)f, 0));
+                    SfxPlayCrash?.Invoke(this, ((int)f, 0));
                     //XTGraphics.Acrash(Im, f, 0);
                 }
                 for (var i115 = 0; i115 < 40; i115++)
