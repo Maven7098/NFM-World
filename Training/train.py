@@ -16,32 +16,40 @@ def train():
     env = gym.make("NFMRacer-v1", ip="127.0.0.1", port=9000)
     env = Monitor(env, "./ppo_nfm_tensorboard/") # Monitor logs episode stats
 
-    # Instantiate the model
-    # Reduced n_steps from 2048 to 512 so it logs 4x more frequently
-    model = PPO(
-        policy="MlpPolicy",
-        env=env,
-        n_steps=512, 
-        batch_size=64,
-        n_epochs=10,
-        gamma=0.99,
-        gae_lambda=0.95,
-        clip_range=0.2,
-        ent_coef=0.01,
-        verbose=1,
-        tensorboard_log="./ppo_nfm_tensorboard/"
-    )
+    model_path = "PPO-NFMRacer-v1"
+
+    # Check if a saved model exists to resume training
+    if os.path.exists(f"{model_path}.zip"):
+        print(f"Loading existing model from {model_path}...")
+        model = PPO.load(model_path, env=env)
+    else:
+        print("No existing model found. Creating a new one...")
+        # Instantiate the model
+        # Reduced n_steps from 2048 to 512 so it logs 4x more frequently
+        model = PPO(
+            policy="MlpPolicy",
+            env=env,
+            n_steps=512, 
+            batch_size=64,
+            n_epochs=10,
+            gamma=0.99,
+            gae_lambda=0.95,
+            clip_range=0.2,
+            ent_coef=0.01,
+            verbose=1,
+            tensorboard_log="./ppo_nfm_tensorboard/"
+        )
 
     print("Starting training... Make sure NFM-World is running in Training mode.")
     
     # Train the agent
     try:
-        model.learn(total_timesteps=500000, progress_bar=True)
-        model.save("PPO-NFMRacer-v1")
-        print("Training complete. Model saved as PPO-NFMRacer-v1")
+        model.learn(total_timesteps=500000, progress_bar=True, reset_num_timesteps=False)
+        model.save(model_path)
+        print(f"Training complete. Model saved as {model_path}")
     except KeyboardInterrupt:
-        print("Training interrupted. Saving current progress...")
-        model.save("PPO-NFMRacer-v1-interrupted")
+        print("\nTraining interrupted. Saving current progress...")
+        model.save(f"{model_path}-interrupted")
 
 if __name__ == "__main__":
     train()
